@@ -49,7 +49,7 @@ function RequestForm({ request }: RequestFormProps) {
       />
       <StringField label="IDs" values={request.filter.ids as string[]} onChange={(values) => handleChange('ids', values)} />
       <StringField label="Authors" values={request.filter.authors as string[]} onChange={(values) => handleChange('authors', values)} />
-      <StringField label="Kinds" values={request.filter.kinds as string[]} onChange={(values) => handleChange('kinds', values)} />
+      <StringField label="Kinds" values={request.filter.kinds.map(x => x.toString()) as string[]} onChange={(values) => handleChange('kinds', values)} />
       
       {customTags.map(([tag, values]) => (
         <StringField
