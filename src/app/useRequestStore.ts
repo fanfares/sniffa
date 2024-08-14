@@ -5,8 +5,8 @@ import { v4 as uuidv4 } from 'uuid'
 export type Filter = {
   ids: string[]
   authors: string[]
-  kinds: string[]
-  [key: string]: string[] | number | undefined
+  kinds: number[]
+  [key: string]: string[] | number[] | number | undefined
   since?: number
   until?: number
   limit?: number
@@ -49,12 +49,28 @@ export const useRequestStore = create<RequestStore>()(
         }))
       },
       updateRequest: (id, updates) => {
-        set((state) => ({
-          requests: {
-            ...state.requests,
-            [id]: { ...state.requests[id], ...updates },
-          },
-        }))
+        set((state) => {
+          const currentRequest = state.requests[id]
+          let updatedFilter = updates.filter ? { ...currentRequest.filter, ...updates.filter } : currentRequest.filter
+
+          // Convert kinds to integers if they are being updated
+          if (updates.filter && 'kinds' in updates.filter) {
+            updatedFilter.kinds = (updates.filter.kinds as (string | number)[]).map(kind => 
+              typeof kind === 'string' ? parseInt(kind, 10) : kind
+            ).filter(kind => !isNaN(kind))
+          }
+
+          return {
+            requests: {
+              ...state.requests,
+              [id]: { 
+                ...currentRequest,
+                ...updates,
+                filter: updatedFilter
+              },
+            },
+          }
+        })
       },
       deleteRequest: (id) => {
         set((state) => {
