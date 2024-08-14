@@ -4,7 +4,7 @@ import { useRequestStore } from './useRequestStore'
 function Sidebar() {
   const { requests, currentRequestId, setCurrentRequest, deleteRequest } = useRequestStore()
 
-  const sortedRequests = Object.values(requests).sort((a, b) => b.createdAt - a.createdAt)
+  const sortedRequests = Object.values(requests).sort((a, b) => b.created_at - a.created_at)
 
   return (
     <>

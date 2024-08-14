@@ -23,13 +23,13 @@ function RequestForm({ request }: RequestFormProps) {
 
   const handleAddTag = () => {
     if (newTag && newTag.length === 1 && /^[a-zA-Z]$/.test(newTag)) {
-      updateRequest(request.id, { filter: { ...request.filter, [newTag]: [] } })
+      updateRequest(request.id, { filter: { ...request.filter, [`#${newTag}`]: [] } })
       setNewTag('')
     }
   }
 
   const customTags = Object.entries(request.filter).filter(
-    ([key]) => key.length === 1 && /^[a-zA-Z]$/.test(key)
+    ([key]) => key.length === 2 && /^\#[a-zA-Z]$/.test(key)
   )
 
   return (
@@ -49,7 +49,7 @@ function RequestForm({ request }: RequestFormProps) {
       {customTags.map(([tag, values]) => (
         <StringField
           key={tag}
-          label={`#${tag}`}
+          label={`${tag}`}
           values={values as string[]}
           onChange={(values) => handleChange(tag, values)}
         />

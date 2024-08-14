@@ -16,7 +16,7 @@ export type Request = {
   id: string
   name: string
   filter: Filter
-  createdAt: number
+  created_at: number
 }
 
 type RequestStore = {
@@ -42,7 +42,7 @@ export const useRequestStore = create<RequestStore>()(
               id,
               name,
               filter: { ids: [], authors: [], kinds: [] },
-              createdAt: Date.now(),
+              created_at: Date.now(),
             },
           },
           currentRequestId: id,

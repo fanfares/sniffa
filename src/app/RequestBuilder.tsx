@@ -5,6 +5,8 @@ import RequestForm from './RequestForm'
 function RequestBuilder() {
   const { requests, currentRequestId, createRequest } = useRequestStore()
 
+  console.log(requests)
+
   const currentRequest = currentRequestId ? requests[currentRequestId] : null
 
   const handleNewRequest = () => {
