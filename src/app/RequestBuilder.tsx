@@ -1,6 +1,7 @@
 import React from 'react'
 import { useRequestStore } from './useRequestStore'
 import RequestForm from './RequestForm'
+import CreateRequestButton from './CreateRequestButton'
 
 function RequestBuilder() {
   const { requests, currentRequestId, createRequest } = useRequestStore()
@@ -19,14 +20,7 @@ function RequestBuilder() {
       {currentRequest ? (
         <RequestForm request={currentRequest} />
       ) : null }
-      <div className="mt-10">
-        <button
-          className="bg-stone-500 text-white px-4 py-2 rounded hover:bg-stone-600"
-          onClick={handleNewRequest}
-        >
-          Create New Request
-        </button>
-      </div>
+      <CreateRequestButton handleNewRequest={handleNewRequest} />
     </section>
   )
 }
