@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from "next/image";
 import { useRequestStore } from './useRequestStore'
 
 function Sidebar() {
@@ -8,17 +9,18 @@ function Sidebar() {
 
   return (
     <>
-      <h2 className="text-stone-600 text-xl font-bold mb-4 mt-8">Requests</h2>
+      <Image className="pt-6" src="/nose.png" alt="nose" width={64} height={64} />
+      <h2 className="text-stone-600 text-2xl font-bold mb-4 mt-4">Filters</h2>
       <ul>
         {sortedRequests.map((request) => (
           <li
             key={request.id}
             className={`mb-2 p-2 rounded cursor-pointer ${
-              request.id === currentRequestId ? 'bg-indigo-500 text-white' : 'hover:bg-stone-400'
+              request.id === currentRequestId ? 'bg-stone-800 text-white' : 'hover:bg-stone-400'
             }`}
             onClick={() => setCurrentRequest(request.id)}
           >
-            <span>{request.name}</span>
+            <span className="text-stone-300">{request.name}</span>
             <button
               className="ml-2 text-red-500 hover:text-red-700"
               onClick={(e) => {

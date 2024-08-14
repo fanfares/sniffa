@@ -27,7 +27,7 @@ function StringField({ label, values, onChange }: StringFieldProps) {
       {inputValues.map((value, index) => (
         <div key={index} className="flex items-center mb-2">
           <input
-            className="bg-stone-800 text-stone-400 rounded px-2 py-1 w-full"
+            className="bg-stone-800 text-stone-400 rounded px-2 py-1 w-full mr-2"
             type="text"
             value={value}
             onChange={(e) => handleChange(index, e.target.value)}
@@ -35,7 +35,7 @@ function StringField({ label, values, onChange }: StringFieldProps) {
           {index === inputValues.length - 1 && value !== '' && (
             <PlusCircle
               className="ml-2 cursor-pointer text-indigo-400"
-              size={20}
+              size={24}
               onClick={addField}
             />
           )}

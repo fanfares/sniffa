@@ -9,6 +9,10 @@ interface RequestFormProps {
   request: Request
 }
 
+function capitalizeEachWord(str: string) {
+  return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
+
 function RequestForm({ request }: RequestFormProps) {
   const updateRequest = useRequestStore((state) => state.updateRequest)
   const [newTag, setNewTag] = useState('')
@@ -18,7 +22,8 @@ function RequestForm({ request }: RequestFormProps) {
   }
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateRequest(request.id, { name: e.target.value })
+    const filterName = capitalizeEachWord(e.target.value)
+    updateRequest(request.id, { name: filterName })
   }
 
   const handleAddTag = () => {
@@ -36,7 +41,7 @@ function RequestForm({ request }: RequestFormProps) {
     <div className="bg-stone-700 p-4 rounded-lg">
       <label className="block text-sm font-medium text-stone-400 mb-1">Filter Name</label>
       <input
-        className="bg-stone-800 text-stone-400 rounded px-2 py-1 w-full mb-4 placeholder-stone-700"
+        className="bg-stone-800 text-stone-400 rounded px-2 py-1 w-full mb-4 placeholder-stone-700 text-[1.5em] font-black"
         type="text"
         value={request.name}
         onChange={handleNameChange}
@@ -57,7 +62,7 @@ function RequestForm({ request }: RequestFormProps) {
       
       <div className="mb-4">
         <label className="block text-sm font-medium text-stone-400 mb-1">Tags</label>
-        <div className="flex">
+        <div className="flex items-center mb-2">
           <input
             className="bg-stone-800 text-stone-400 rounded px-2 py-1 w-full mr-2 placeholder-stone-700"
             type="text"
@@ -67,7 +72,7 @@ function RequestForm({ request }: RequestFormProps) {
             maxLength={1}
           />
           <PlusCircle
-            className="cursor-pointer text-stone-400"
+            className="ml-2 cursor-pointer text-indigo-400"
             size={24}
             onClick={handleAddTag}
           />

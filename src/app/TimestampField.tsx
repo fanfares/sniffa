@@ -8,15 +8,20 @@ interface TimestampFieldProps {
 
 function TimestampField({ label, value, onChange }: TimestampFieldProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const date = e.target.value ? new Date(e.target.value) : undefined
-    const timestamp = date ? Math.floor(date.getTime() / 1000) : undefined
+    const inputDate = e.target.value ? new Date(e.target.value) : undefined
+    const timestamp = inputDate ? Math.floor(inputDate.getTime() / 1000) : undefined
     onChange(timestamp)
   }
 
   const formatDate = (timestamp: number | undefined) => {
     if (!timestamp) return ''
     const date = new Date(timestamp * 1000)
-    return date.toISOString().slice(0, 16) // Format: YYYY-MM-DDTHH:mm
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    return `${year}-${month}-${day}T${hours}:${minutes}`
   }
 
   return (
