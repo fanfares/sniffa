@@ -6,9 +6,7 @@ export type Filter = {
   ids: string[]
   authors: string[]
   kinds: string[]
-  "#e": string[]
-  "#p": string[]
-  "#t": string[]
+  [key: string]: string[] | number | undefined
   since?: number
   until?: number
   limit?: number
@@ -43,7 +41,7 @@ export const useRequestStore = create<RequestStore>()(
             [id]: {
               id,
               name,
-              filter: { ids: [], authors: [], kinds: [], "#e": [], "#p": [], "#t": [] },
+              filter: { ids: [], authors: [], kinds: [] },
               createdAt: Date.now(),
             },
           },

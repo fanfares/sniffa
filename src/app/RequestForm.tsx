@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import StringField from './StringField'
+import NumberField from './NumberField'
+import TimestampField from './TimestampField'
 import { Request, useRequestStore } from './useRequestStore'
+import { PlusCircle } from 'lucide-react'
 
 interface RequestFormProps {
   request: Request
@@ -8,14 +11,26 @@ interface RequestFormProps {
 
 function RequestForm({ request }: RequestFormProps) {
   const updateRequest = useRequestStore((state) => state.updateRequest)
+  const [newTag, setNewTag] = useState('')
 
-  const handleChange = (field: keyof Request['filter'], values: string[]) => {
-    updateRequest(request.id, { filter: { ...request.filter, [field]: values } })
+  const handleChange = (field: keyof Request['filter'], value: string[] | number | undefined) => {
+    updateRequest(request.id, { filter: { ...request.filter, [field]: value } })
   }
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateRequest(request.id, { name: e.target.value })
   }
+
+  const handleAddTag = () => {
+    if (newTag && newTag.length === 1 && /^[a-zA-Z]$/.test(newTag)) {
+      updateRequest(request.id, { filter: { ...request.filter, [newTag]: [] } })
+      setNewTag('')
+    }
+  }
+
+  const customTags = Object.entries(request.filter).filter(
+    ([key]) => key.length === 1 && /^[a-zA-Z]$/.test(key)
+  )
 
   return (
     <div className="bg-stone-700 p-4 rounded-lg">
@@ -27,13 +42,56 @@ function RequestForm({ request }: RequestFormProps) {
         onChange={handleNameChange}
         placeholder="Looking for memes"
       />
-      <StringField label="IDs" values={request.filter.ids} onChange={(values) => handleChange('ids', values)} />
-      <StringField label="Authors" values={request.filter.authors} onChange={(values) => handleChange('authors', values)} />
-      <StringField label="Kinds" values={request.filter.kinds} onChange={(values) => handleChange('kinds', values)} />
-      <StringField label="#e" values={request.filter['#e']} onChange={(values) => handleChange('#e', values)} />
-      <StringField label="#p" values={request.filter['#p']} onChange={(values) => handleChange('#p', values)} />
-      <StringField label="#t" values={request.filter['#t']} onChange={(values) => handleChange('#t', values)} />
-      <button className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600">
+      <StringField label="IDs" values={request.filter.ids as string[]} onChange={(values) => handleChange('ids', values)} />
+      <StringField label="Authors" values={request.filter.authors as string[]} onChange={(values) => handleChange('authors', values)} />
+      <StringField label="Kinds" values={request.filter.kinds as string[]} onChange={(values) => handleChange('kinds', values)} />
+      
+      {customTags.map(([tag, values]) => (
+        <StringField
+          key={tag}
+          label={`#${tag}`}
+          values={values as string[]}
+          onChange={(values) => handleChange(tag, values)}
+        />
+      ))}
+      
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-stone-400 mb-1">Tags</label>
+        <div className="flex">
+          <input
+            className="bg-stone-800 text-stone-400 rounded px-2 py-1 w-full mr-2 placeholder-stone-700"
+            type="text"
+            value={newTag}
+            onChange={(e) => setNewTag(e.target.value)}
+            placeholder="Add custom tag (single letter)"
+            maxLength={1}
+          />
+          <PlusCircle
+            className="cursor-pointer text-stone-400"
+            size={24}
+            onClick={handleAddTag}
+          />
+        </div>
+      </div>
+
+      <TimestampField
+        label="Since"
+        value={request.filter.since as number | undefined}
+        onChange={(value) => handleChange('since', value)}
+      />
+      <TimestampField
+        label="Until"
+        value={request.filter.until as number | undefined}
+        onChange={(value) => handleChange('until', value)}
+      />
+      <NumberField
+        label="Limit"
+        value={request.filter.limit as number | undefined}
+        onChange={(value) => handleChange('limit', value)}
+        min={1}
+      />
+
+      <button className="bg-stone-500 text-white px-4 py-2 rounded hover:bg-stone-600">
         Run
       </button>
     </div>
