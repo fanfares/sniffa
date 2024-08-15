@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import StringField from './StringField'
 import NumberField from './NumberField'
 import TimestampField from './TimestampField'
-import { Request, useRequestStore } from './useRequestStore'
+import { RawEvent, Request, useRequestStore } from './useRequestStore'
 import { ChevronRight, PlusCircle } from 'lucide-react'
 import { NDKEvent, NDKFilter, NDKUser } from "@nostr-dev-kit/ndk"
 import useNDKStore from './useNDKStore'
@@ -33,7 +33,7 @@ function RequestForm({ request }: RequestFormProps) {
     const validRelays = values.filter(relay => relayRegex.test(relay))
     
     // Ensure there's always at least one valid relay
-    const updatedRelays = validRelays.length > 0 ? validRelays : ['wss://relay.damus.io']
+    const updatedRelays = validRelays.length > 0 ? validRelays : ['wss://relay.primal.net']
     
     updateRequest(request.id, { relays: updatedRelays })
   }
@@ -58,7 +58,7 @@ function RequestForm({ request }: RequestFormProps) {
     console.log('using filter', filter)
     const results = await fetchEvents(filter)
     console.log('got result', results)
-    updateRequest(request.id, { results }) // need to update useRequestStore to handle results
+    updateRequest(request.id, { results: Array.from(results).map( event => event.rawEvent() as RawEvent) }) // need to update useRequestStore to handle results
     setRequestInProgress(false)
   }
 
@@ -76,7 +76,7 @@ function RequestForm({ request }: RequestFormProps) {
 
 
   return (
-    <div className="bg-stone-700 p-4 rounded-lg">
+    <div key={request.id} className="bg-stone-700 p-4 rounded-lg">
       <label className="block text-sm font-medium text-stone-400 mb-1">Filter Name</label>
       <input
         className="bg-stone-800 text-stone-400 rounded px-2 py-1 w-full mb-4 placeholder-stone-700 text-[1.5em] font-black font-grandstander"
@@ -134,7 +134,7 @@ function RequestForm({ request }: RequestFormProps) {
       />
       <NumberField
         label="Limit"
-        value={request.filter.limit as number | undefined}
+        value={request.filter.limit as number | undefined || 20}
         onChange={(value) => handleChange('limit', value)}
         min={1}
       />
@@ -144,17 +144,17 @@ function RequestForm({ request }: RequestFormProps) {
           Run
         </button>
       }
-      {request.results.size > 0 ? 
+      {request.results.length > 0 ? 
         <details className="mt-4">
           <summary className="cursor-pointer text-stone-400 text-lg flex items-center">
             <ChevronRight className="inline-block mr-2 transform transition-transform duration-200" />
-            Results ({request.results.size})
+            Results ({request.results.length})
           </summary>
           <div className="results mt-2">
-            { Array.from(request.results).map((event: NDKEvent, i) => (
+            { Array.from(request.results).map((event: RawEvent, i) => (
               <div key={i} className="result text-xs mb-4 p-4 bg-stone-800 overflow-x-auto">
                 <pre className="whitespace-pre-wrap break-words">
-                  {JSON.stringify(event.rawEvent(), null, 2)}
+                  {JSON.stringify(event, null, 2)}
                 </pre>
               </div>
             ))}

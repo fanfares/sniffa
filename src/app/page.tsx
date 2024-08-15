@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import RequestBuilder from "./RequestBuilder";
 import Sidebar from "./Sidebar";
+import ScrollToTop from "./ScrollToTop";
 
 export default function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -46,6 +47,7 @@ export default function Home() {
         </header>
         <section className="content">
           <RequestBuilder />
+          <ScrollToTop />
         </section>
       </main>
     </div>

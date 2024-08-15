@@ -13,12 +13,22 @@ export type Filter = {
   limit?: number
 }
 
+export type RawEvent = {
+  id: string
+  pubkey: string
+  created_at: number
+  kind: number
+  tags: string[][]
+  content: string
+  sig: string
+}
+
 export type Request = {
   id: string
   name: string
   filter: Filter
   relays: string[]
-  results: Set<NDKEvent>
+  results: RawEvent[]
   created_at: number // this is just when we created the request, not related to nostr events created_at.
 }
 
@@ -45,8 +55,8 @@ export const useRequestStore = create<RequestStore>()(
               id,
               name,
               filter: { ids: [], authors: [], kinds: [] },
-              relays: ['wss://relay.damus.io'],  // Default relay
-              results: new Set(),
+              relays: ['wss://relay.primal.net'],  // Default relay
+              results: [] as RawEvent[],
               created_at: Date.now(),
             },
           },

@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
-import useNDKStore from "../store/ndk-store"
+import useNDKStore from "./useNDKStore"
 import { NDKEvent, NDKFilter, NDKUser } from "@nostr-dev-kit/ndk"
 import Image from "next/image"
 

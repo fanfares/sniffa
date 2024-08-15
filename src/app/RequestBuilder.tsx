@@ -9,7 +9,7 @@ function RequestBuilder() {
   const currentRequest = currentRequestId ? requests[currentRequestId] : null
 
   const handleNewRequest = () => {
-    createRequest('New Sniff')
+    createRequest('New Sniff ✨👃')
   }
 
   return (
