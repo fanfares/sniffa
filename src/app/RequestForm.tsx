@@ -180,7 +180,7 @@ function RequestForm({ request }: RequestFormProps) {
             { displayResults }
           </div>
         </details>
-      : <div className="mt-4">No Results</div> }
+      : <div className="mt-4 text-lg text-stone-400">No Results</div> }
     </div>
   )
 }
