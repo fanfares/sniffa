@@ -54,7 +54,7 @@ export const useRequestStore = create<RequestStore>()(
             [id]: {
               id,
               name,
-              filter: { ids: [], authors: [], kinds: [] },
+              filter: { ids: [], authors: [], kinds: [], limit: 20 },
               relays: ['wss://relay.primal.net'],  // Default relay
               results: [] as RawEvent[],
               created_at: Date.now(),
