@@ -19,13 +19,19 @@ function RequestForm({ request }: RequestFormProps) {
   const [newTag, setNewTag] = useState('')
 
   const handleChange = (field: keyof Request['filter'] | 'relays', value: string[] | number[] | number | undefined) => {
-    if (field === 'relays') {
-      // Ensure there's always at least one relay
-      const relays = (value as string[]).filter(Boolean)
-      updateRequest(request.id, { relays: relays.length > 0 ? relays : ['wss://relay.damus.io'] })
-    } else {
-    updateRequest(request.id, { filter: { ...request.filter, [field]: value } })
+    if (field !== 'relays') {
+      updateRequest(request.id, { filter: { ...request.filter, [field]: value } })
     }
+  }
+
+  const handleRelay = (values: string[]) => {
+    const relayRegex = /^wss:\/\/[\w.-]+\.[a-zA-Z]{2,}(:\d+)?(\/\S*)?$/
+    const validRelays = values.filter(relay => relayRegex.test(relay))
+    
+    // Ensure there's always at least one valid relay
+    const updatedRelays = validRelays.length > 0 ? validRelays : ['wss://relay.damus.io']
+    
+    updateRequest(request.id, { relays: updatedRelays })
   }
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +63,7 @@ function RequestForm({ request }: RequestFormProps) {
       <StringField 
         label="Relays" 
         values={request.relays} 
-        onChange={(values) => handleChange('relays', values)}
+        onChange={handleRelay}
       />
       <StringField label="IDs" values={request.filter.ids as string[]} onChange={(values) => handleChange('ids', values)} />
       <StringField label="Authors" values={request.filter.authors as string[]} onChange={(values) => handleChange('authors', values)} />

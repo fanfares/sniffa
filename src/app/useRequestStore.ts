@@ -17,7 +17,7 @@ export type Request = {
   name: string
   filter: Filter
   relays: string[]
-  created_at: number
+  created_at: number // this is just when we created the request, not related to nostr events created_at.
 }
 
 type RequestStore = {

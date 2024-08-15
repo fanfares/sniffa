@@ -33,6 +33,9 @@ function Sidebar() {
           </li>
         ))}
       </ul>
+      <div className="m-4 mt-auto p-4 bg-stone-600 text-stone-300 text-sm rounded-lg">
+        <p>All data is stored locally in this browser.</p>
+      </div>
     </>
   )
 }
