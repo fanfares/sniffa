@@ -75,7 +75,10 @@ export const useRequestStore = create<RequestStore>()(
       deleteRequest: (id) => {
         set((state) => {
           const { [id]: _, ...rest } = state.requests
-          return { requests: rest, currentRequestId: null }
+          return {
+            requests: rest,
+            currentRequestId: state.currentRequestId === id ? null : state.currentRequestId
+          }
         })
       },
       setCurrentRequest: (id) => {

@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RequestBuilder from "./RequestBuilder";
 import Sidebar from "./Sidebar";
 
@@ -8,7 +8,17 @@ export default function Home() {
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
-  };
+  }
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.code === 'Escape') {
+        setIsDrawerOpen(!isDrawerOpen)
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  },[isDrawerOpen])
 
   return (
     <div className="relative overflow-x-hidden">
@@ -18,7 +28,7 @@ export default function Home() {
         <Sidebar />
       </nav>  
 
-      <main className={`flex min-h-screen flex-col bg-stone-800 items-left justify-start p-8 transition-transform duration-300 ease-in-out ${
+      <main className={`flex min-h-screen flex-col bg-stone-800 items-left justify-start p-4 transition-transform duration-300 ease-in-out ${
         isDrawerOpen ? 'transform translate-x-64' : ''
       }`}>
         <header className="flex items-center justify-between w-full">

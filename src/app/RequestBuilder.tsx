@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRequestStore } from './useRequestStore'
 import RequestForm from './RequestForm'
 import CreateRequestButton from './CreateRequestButton'
@@ -11,7 +11,7 @@ function RequestBuilder() {
   const currentRequest = currentRequestId ? requests[currentRequestId] : null
 
   const handleNewRequest = () => {
-    createRequest('Name This Request')
+    createRequest('New Sniff')
   }
 
   return (
