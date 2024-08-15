@@ -14,11 +14,18 @@ function capitalizeEachWord(str: string) {
 }
 
 function RequestForm({ request }: RequestFormProps) {
+  console.log(request)
   const updateRequest = useRequestStore((state) => state.updateRequest)
   const [newTag, setNewTag] = useState('')
 
-  const handleChange = (field: keyof Request['filter'], value: string[] | number | undefined) => {
+  const handleChange = (field: keyof Request['filter'] | 'relays', value: string[] | number[] | number | undefined) => {
+    if (field === 'relays') {
+      // Ensure there's always at least one relay
+      const relays = (value as string[]).filter(Boolean)
+      updateRequest(request.id, { relays: relays.length > 0 ? relays : ['wss://relay.damus.io'] })
+    } else {
     updateRequest(request.id, { filter: { ...request.filter, [field]: value } })
+    }
   }
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,16 +54,21 @@ function RequestForm({ request }: RequestFormProps) {
         onChange={handleNameChange}
         placeholder="Looking for memes"
       />
+      <StringField 
+        label="Relays" 
+        values={request.relays} 
+        onChange={(values) => handleChange('relays', values)}
+      />
       <StringField label="IDs" values={request.filter.ids as string[]} onChange={(values) => handleChange('ids', values)} />
       <StringField label="Authors" values={request.filter.authors as string[]} onChange={(values) => handleChange('authors', values)} />
-      <StringField label="Kinds" values={request.filter.kinds.map(x => x.toString()) as string[]} onChange={(values) => handleChange('kinds', values)} />
+      <StringField label="Kinds" values={request.filter.kinds.map(String)} onChange={(values) => handleChange('kinds', values.map(v => parseInt(v, 10)))} />
       
       {customTags.map(([tag, values]) => (
         <StringField
           key={tag}
           label={`${tag}`}
           values={values as string[]}
-          onChange={(values) => handleChange(tag, values)}
+          onChange={(values) => handleChange(tag as keyof Request['filter'], values)}
         />
       ))}
       

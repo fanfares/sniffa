@@ -16,6 +16,7 @@ export type Request = {
   id: string
   name: string
   filter: Filter
+  relays: string[]
   created_at: number
 }
 
@@ -42,6 +43,7 @@ export const useRequestStore = create<RequestStore>()(
               id,
               name,
               filter: { ids: [], authors: [], kinds: [] },
+              relays: ['wss://relay.damus.io'],  // Default relay
               created_at: Date.now(),
             },
           },
@@ -53,7 +55,6 @@ export const useRequestStore = create<RequestStore>()(
           const currentRequest = state.requests[id]
           let updatedFilter = updates.filter ? { ...currentRequest.filter, ...updates.filter } : currentRequest.filter
 
-          // Convert kinds to integers if they are being updated
           if (updates.filter && 'kinds' in updates.filter) {
             updatedFilter.kinds = (updates.filter.kinds as (string | number)[]).map(kind => 
               typeof kind === 'string' ? parseInt(kind, 10) : kind
@@ -66,7 +67,8 @@ export const useRequestStore = create<RequestStore>()(
               [id]: { 
                 ...currentRequest,
                 ...updates,
-                filter: updatedFilter
+                filter: updatedFilter,
+                relays: updates.relays || currentRequest.relays,
               },
             },
           }

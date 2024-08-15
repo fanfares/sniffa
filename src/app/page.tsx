@@ -32,7 +32,15 @@ export default function Home() {
         isDrawerOpen ? 'transform translate-x-64' : ''
       }`}>
         <header className="flex items-center justify-between w-full">
-          <div className="logo cursor-pointer" onClick={toggleDrawer}>
+          <div className="logo cursor-pointer flex items-center" onClick={toggleDrawer}>
+            <button 
+              className="hamburger-button mr-4 mt-[-0.5em] p-2 focus:outline-none"
+              onClick={toggleDrawer}
+            >
+              <div className="w-6 h-0.5 bg-stone-950 mb-1"></div>
+              <div className="w-6 h-0.5 bg-stone-950 mb-1"></div>
+              <div className="w-6 h-0.5 bg-stone-950"></div>
+            </button>
             <h1 className="text-stone-900 font-black text-[3em]">Sniffa</h1>
           </div>
         </header>
