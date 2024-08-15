@@ -4,6 +4,8 @@ import NumberField from './NumberField'
 import TimestampField from './TimestampField'
 import { Request, useRequestStore } from './useRequestStore'
 import { PlusCircle } from 'lucide-react'
+import { NDKEvent, NDKFilter, NDKUser } from "@nostr-dev-kit/ndk"
+import useNDKStore from './useNDKStore'
 
 interface RequestFormProps {
   request: Request
@@ -16,7 +18,9 @@ function capitalizeEachWord(str: string) {
 function RequestForm({ request }: RequestFormProps) {
   console.log(request)
   const updateRequest = useRequestStore((state) => state.updateRequest)
+  const { initNDK, fetchEvents } = useNDKStore()
   const [newTag, setNewTag] = useState('')
+  const [requestInProgress, setRequestInProgress] = useState(false)
 
   const handleChange = (field: keyof Request['filter'] | 'relays', value: string[] | number[] | number | undefined) => {
     if (field !== 'relays') {
@@ -42,13 +46,23 @@ function RequestForm({ request }: RequestFormProps) {
   const handleAddTag = () => {
     if (newTag && newTag.length === 1 && /^[a-zA-Z]$/.test(newTag)) {
       updateRequest(request.id, { filter: { ...request.filter, [`#${newTag}`]: [] } })
-      setNewTag('')
+      setNewTag('') // clear the input
     }
+  }
+
+  async function runRequest() {
+    setRequestInProgress(true)
+    await initNDK(request.relays, false)
+    const filter = request.filter as NDKFilter
+    const results = await fetchEvents(filter)
+    updateRequest(request.id, { /* ??? */ }) // need to update useRequestStore to handle results
+    setRequestInProgress(false)
   }
 
   const customTags = Object.entries(request.filter).filter(
     ([key]) => key.length === 2 && /^\#[a-zA-Z]$/.test(key)
   )
+
 
   return (
     <div className="bg-stone-700 p-4 rounded-lg">
@@ -114,9 +128,22 @@ function RequestForm({ request }: RequestFormProps) {
         min={1}
       />
 
-      <button className="bg-stone-500 text-white px-4 py-2 rounded hover:bg-stone-600">
-        Run
-      </button>
+      { requestInProgress ? null :
+        <button className="bg-stone-500 text-white px-4 py-2 rounded hover:bg-stone-600" onClick={runRequest}>
+          Run
+        </button>
+      }
+      {request.results.size > 0 ? 
+        <div className="results">
+          { Array.from(request.results).map((event: NDKEvent, i) => (
+            <div key={i} className="result">
+              <pre className="">
+                {JSON.stringify(event)}
+              </pre>
+            </div>
+          ))}
+        </div>
+      : null }
     </div>
   )
 }

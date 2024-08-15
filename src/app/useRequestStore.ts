@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { v4 as uuidv4 } from 'uuid'
+import { NDKEvent } from '@nostr-dev-kit/ndk'
 
 export type Filter = {
   ids: string[]
@@ -17,6 +18,7 @@ export type Request = {
   name: string
   filter: Filter
   relays: string[]
+  results: Set<NDKEvent>
   created_at: number // this is just when we created the request, not related to nostr events created_at.
 }
 
@@ -44,6 +46,7 @@ export const useRequestStore = create<RequestStore>()(
               name,
               filter: { ids: [], authors: [], kinds: [] },
               relays: ['wss://relay.damus.io'],  // Default relay
+              results: new Set(),
               created_at: Date.now(),
             },
           },
