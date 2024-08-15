@@ -19,7 +19,7 @@ export default function GlobalError({
       <body>
         <div className="flex flex-col items-center justify-center h-screen bg-stone-800 text-white">
           <h2 className="text-2xl mb-4">Something went wrong!</h2>
-          <p className="mb-4">We've cleared the stored data to prevent further issues.</p>
+          <p className="mb-4">We&apos;ve cleared the stored data to prevent further issues.</p>
           <button
             className="bg-stone-600 hover:bg-stone-700 text-white font-bold py-2 px-4 rounded"
             onClick={() => window.location.reload()}
