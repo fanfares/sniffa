@@ -23,6 +23,7 @@ function RequestForm({ request }: RequestFormProps) {
   const { initNDK, fetchEvents } = useNDKStore()
   const [newTag, setNewTag] = useState('')
   const [requestInProgress, setRequestInProgress] = useState(false)
+  const [noResults, setNoResults] = useState(false)
 
   const handleChange = (field: keyof Request['filter'] | 'relays', value: string[] | number[] | number | undefined) => {
     if (field !== 'relays') {
@@ -61,6 +62,11 @@ function RequestForm({ request }: RequestFormProps) {
     console.log('using filter', filter, 'relays', request.relays)
     const results = await fetchEvents(filter)
     console.log('got result', results)
+    if (results.size === 0) {
+      setNoResults(true)
+    } else {
+      setNoResults(false)
+    }
     updateRequest(request.id, { results: Array.from(results).map( event => event.rawEvent() as RawEvent) }) // need to update useRequestStore to handle results
     setRequestInProgress(false)
   }
@@ -154,7 +160,7 @@ function RequestForm({ request }: RequestFormProps) {
       />
       <NumberField
         label="Limit"
-        value={request.filter.limit as number | undefined || 20}
+        value={request.filter.limit as number | undefined}
         onChange={(value) => handleChange('limit', value)}
         min={1}
       />
@@ -174,7 +180,7 @@ function RequestForm({ request }: RequestFormProps) {
             { displayResults }
           </div>
         </details>
-      : null }
+      : <div className="mt-4">No Results</div> }
     </div>
   )
 }
