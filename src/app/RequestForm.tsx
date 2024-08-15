@@ -41,7 +41,7 @@ function RequestForm({ request }: RequestFormProps) {
     <div className="bg-stone-700 p-4 rounded-lg">
       <label className="block text-sm font-medium text-stone-400 mb-1">Filter Name</label>
       <input
-        className="bg-stone-800 text-stone-400 rounded px-2 py-1 w-full mb-4 placeholder-stone-700 text-[1.5em] font-black"
+        className="bg-stone-800 text-stone-400 rounded px-2 py-1 w-full mb-4 placeholder-stone-700 text-[1.5em] font-black font-grandstander"
         type="text"
         value={request.name}
         onChange={handleNameChange}
