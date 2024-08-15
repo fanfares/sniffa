@@ -4,10 +4,8 @@ import { useEffect } from 'react'
 
 export default function GlobalError({
   error,
-  reset,
 }: {
   error: Error & { digest?: string }
-  reset: () => void
 }) {
   useEffect(() => {
     // Log the error to an error reporting service
@@ -24,7 +22,7 @@ export default function GlobalError({
           <p className="mb-4">We've cleared the stored data to prevent further issues.</p>
           <button
             className="bg-stone-600 hover:bg-stone-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => reset()}
+            onClick={() => window.location.reload()}
           >
             Try again
           </button>
