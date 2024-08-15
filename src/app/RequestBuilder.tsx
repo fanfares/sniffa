@@ -14,11 +14,11 @@ function RequestBuilder() {
 
   return (
     <section className="request-builder">
-      <h2 className="text-2xl font-bold mb-4 text-stone-700">Nostr Filter Builder</h2>
+      <h2 className="text-2xl font-bold mb-2 text-stone-700">Nostr Filter Builder</h2>
+      <CreateRequestButton handleNewRequest={handleNewRequest} />
       {currentRequest ? (
         <RequestForm request={currentRequest} />
       ) : null }
-      <CreateRequestButton handleNewRequest={handleNewRequest} />
     </section>
   )
 }

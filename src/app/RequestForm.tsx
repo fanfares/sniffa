@@ -3,7 +3,7 @@ import StringField from './StringField'
 import NumberField from './NumberField'
 import TimestampField from './TimestampField'
 import { Request, useRequestStore } from './useRequestStore'
-import { PlusCircle } from 'lucide-react'
+import { ChevronRight, PlusCircle } from 'lucide-react'
 import { NDKEvent, NDKFilter, NDKUser } from "@nostr-dev-kit/ndk"
 import useNDKStore from './useNDKStore'
 
@@ -53,10 +53,21 @@ function RequestForm({ request }: RequestFormProps) {
   async function runRequest() {
     setRequestInProgress(true)
     await initNDK(request.relays, false)
-    const filter = request.filter as NDKFilter
+    const filter = cleanFilter(request.filter as NDKFilter)
+    
+    console.log('using filter', filter)
     const results = await fetchEvents(filter)
-    updateRequest(request.id, { /* ??? */ }) // need to update useRequestStore to handle results
+    console.log('got result', results)
+    updateRequest(request.id, { results }) // need to update useRequestStore to handle results
     setRequestInProgress(false)
+  }
+
+  const cleanFilter = (filter: Record<string, any>) => {
+    return Object.fromEntries(
+      Object.entries(filter).filter(
+        ([key, value]) => value !== null && value !== undefined && value !== '' && (!Array.isArray(value) || value.length > 0)
+      )
+    )
   }
 
   const customTags = Object.entries(request.filter).filter(
@@ -134,15 +145,21 @@ function RequestForm({ request }: RequestFormProps) {
         </button>
       }
       {request.results.size > 0 ? 
-        <div className="results">
-          { Array.from(request.results).map((event: NDKEvent, i) => (
-            <div key={i} className="result">
-              <pre className="">
-                {JSON.stringify(event)}
-              </pre>
-            </div>
-          ))}
-        </div>
+        <details className="mt-4">
+          <summary className="cursor-pointer text-stone-400 text-lg flex items-center">
+            <ChevronRight className="inline-block mr-2 transform transition-transform duration-200" />
+            Results ({request.results.size})
+          </summary>
+          <div className="results mt-2">
+            { Array.from(request.results).map((event: NDKEvent, i) => (
+              <div key={i} className="result text-xs mb-4 p-4 bg-stone-800 overflow-x-auto">
+                <pre className="whitespace-pre-wrap break-words">
+                  {JSON.stringify(event.rawEvent(), null, 2)}
+                </pre>
+              </div>
+            ))}
+          </div>
+        </details>
       : null }
     </div>
   )

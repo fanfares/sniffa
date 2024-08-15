@@ -5,7 +5,7 @@ type CreateRequestButtonProps = {
 
 function CreateRequestButton({ handleNewRequest }: CreateRequestButtonProps) {
   return (
-    <div className="pt-5 relative">
+    <div className="pb-5 relative">
       <button
         className="bg-stone-500 text-white px-4 py-2 rounded hover:bg-stone-600"
         onClick={handleNewRequest}

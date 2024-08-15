@@ -72,6 +72,7 @@ export const useRequestStore = create<RequestStore>()(
                 ...updates,
                 filter: updatedFilter,
                 relays: updates.relays || currentRequest.relays,
+                results: updates.results || currentRequest.results,
               },
             },
           }
