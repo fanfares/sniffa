@@ -6,6 +6,8 @@ import { RawEvent, Request, useRequestStore } from './useRequestStore'
 import { ChevronRight, PlusCircle } from 'lucide-react'
 import { NDKEvent, NDKFilter, NDKUser } from "@nostr-dev-kit/ndk"
 import useNDKStore from './useNDKStore'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { duotoneEarth } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 interface RequestFormProps {
   request: Request
@@ -153,9 +155,17 @@ function RequestForm({ request }: RequestFormProps) {
           <div className="results mt-2">
             { Array.from(request.results).map((event: RawEvent, i) => (
               <div key={i} className="result text-xs mb-4 p-4 bg-stone-800 overflow-x-auto">
-                <pre className="whitespace-pre-wrap break-words">
+                <SyntaxHighlighter 
+                  language="json" 
+                  style={duotoneEarth}
+                  customStyle={{
+                    margin: 0,
+                    borderRadius: '0.25rem',
+                    background: 'transparent',
+                  }}
+                >
                   {JSON.stringify(event, null, 2)}
-                </pre>
+                </SyntaxHighlighter>
               </div>
             ))}
           </div>

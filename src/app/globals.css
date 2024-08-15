@@ -42,3 +42,22 @@ h1, h2, h3, h4, h5, h6 {
     text-wrap: balance;
   }
 }
+
+/* Webkit browsers (Chrome, Safari, etc.) */
+::-webkit-scrollbar {
+  @apply h-2 bg-amber-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-amber-500 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-amber-500;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.stone.700') theme('colors.stone.900');
+}
