@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import StringField from './StringField'
 import NumberField from './NumberField'
 import TimestampField from './TimestampField'
@@ -54,10 +54,11 @@ function RequestForm({ request }: RequestFormProps) {
 
   async function runRequest() {
     setRequestInProgress(true)
+    console.log('relays', request.relays)
     await initNDK(request.relays, false)
     const filter = cleanFilter(request.filter as NDKFilter)
     
-    console.log('using filter', filter)
+    console.log('using filter', filter, 'relays', request.relays)
     const results = await fetchEvents(filter)
     console.log('got result', results)
     updateRequest(request.id, { results: Array.from(results).map( event => event.rawEvent() as RawEvent) }) // need to update useRequestStore to handle results
@@ -76,6 +77,23 @@ function RequestForm({ request }: RequestFormProps) {
     ([key]) => key.length === 2 && /^\#[a-zA-Z]$/.test(key)
   )
 
+  const displayResults = useMemo(() => {
+    return Array.from(request.results).map((event: RawEvent, i) => (
+      <div key={i} className="result text-xs mb-4 p-4 bg-stone-800 overflow-x-auto">
+        <SyntaxHighlighter 
+          language="json" 
+          style={duotoneEarth}
+          customStyle={{
+            margin: 0,
+            borderRadius: '0.25rem',
+            background: 'transparent',
+          }}
+        >
+          {JSON.stringify(event, null, 2)}
+        </SyntaxHighlighter>
+      </div>
+    ))
+  }, [request.results])
 
   return (
     <div key={request.id} className="bg-stone-700 p-4 rounded-lg">
@@ -153,21 +171,7 @@ function RequestForm({ request }: RequestFormProps) {
             Results ({request.results.length})
           </summary>
           <div className="results mt-2">
-            { Array.from(request.results).map((event: RawEvent, i) => (
-              <div key={i} className="result text-xs mb-4 p-4 bg-stone-800 overflow-x-auto">
-                <SyntaxHighlighter 
-                  language="json" 
-                  style={duotoneEarth}
-                  customStyle={{
-                    margin: 0,
-                    borderRadius: '0.25rem',
-                    background: 'transparent',
-                  }}
-                >
-                  {JSON.stringify(event, null, 2)}
-                </SyntaxHighlighter>
-              </div>
-            ))}
+            { displayResults }
           </div>
         </details>
       : null }
