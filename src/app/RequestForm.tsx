@@ -131,7 +131,7 @@ function RequestForm({ request }: RequestFormProps) {
       />
       <StringField 
         label="Kinds" 
-        placeholder="integers only"
+        placeholder="one integer per field"
         values={request.filter.kinds.map(String)} 
         onChange={(values) => handleChange('kinds', values.map(v => parseInt(v, 10)))} 
       />
