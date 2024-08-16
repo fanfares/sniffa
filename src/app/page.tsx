@@ -48,6 +48,20 @@ export default function Home() {
         <section className="content">
           <RequestBuilder />
           <ScrollToTop />
+          <hr className="my-8 border-stone-600" />
+          <footer className="mt-4 text-stone-400 text-sm">
+            <p>by&nbsp;
+              <a className="" href="https://primal.net/p/npub1arkn0xxxll4llgy9qxkrncn3vc4l69s0dz8ef3zadykcwe7ax3dqrrh43w" target="_blank" rel="noreferrer noopener">
+                <img className="rounded-full inline" src="https://avatars.githubusercontent.com/u/99223753?v=4" width="24" height="24" alt="arkinox profile picture"/>&nbsp;
+                arkinox@team.fanfares.io 
+              </a>
+              <hr className="my-2 block border-transparent" />
+              <a className="" href="https://fanfares.io/" target="_blank" rel="noopener noreferrer">
+                <img className="ml-[-0.5em] rounded-full inline" src="/fanfares-logo.png" width="38" height="38" alt="FanFares logo"/>
+                FanFares.io - Better Podcasts on Nostr
+              </a>
+            </p>
+          </footer>
         </section>
       </main>
     </div>
