@@ -113,17 +113,34 @@ function RequestForm({ request }: RequestFormProps) {
       />
       <StringField 
         label="Relays" 
+        placeholder="wss://relay.example.com"
         values={request.relays} 
         onChange={handleRelay}
       />
-      <StringField label="IDs" values={request.filter.ids as string[]} onChange={(values) => handleChange('ids', values)} />
-      <StringField label="Authors" values={request.filter.authors as string[]} onChange={(values) => handleChange('authors', values)} />
-      <StringField label="Kinds" values={request.filter.kinds.map(String)} onChange={(values) => handleChange('kinds', values.map(v => parseInt(v, 10)))} />
+      <StringField 
+        label="IDs" 
+        placeholder="hex only"
+        values={request.filter.ids as string[]} 
+        onChange={(values) => handleChange('ids', values)} 
+      />
+      <StringField 
+        label="Authors" 
+        placeholder="hex only"
+        values={request.filter.authors as string[]} 
+        onChange={(values) => handleChange('authors', values)} 
+      />
+      <StringField 
+        label="Kinds" 
+        placeholder="integers only"
+        values={request.filter.kinds.map(String)} 
+        onChange={(values) => handleChange('kinds', values.map(v => parseInt(v, 10)))} 
+      />
       
       {customTags.map(([tag, values]) => (
         <StringField
           key={tag}
           label={`${tag}`}
+          placeholder="search string"
           values={values as string[]}
           onChange={(values) => handleChange(tag as keyof Request['filter'], values)}
         />
